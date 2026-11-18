@@ -37,7 +37,21 @@ h1{font-size:28px;margin:0 0 4px}
 .det b{color:var(--ink);font-weight:600}
 .det a{color:var(--accent);word-break:break-all}
 footer{margin-top:28px;color:var(--muted);font-size:13px}
-@media print{.bar{display:none}.grid{display:block}.month{break-inside:avoid;margin-bottom:10px}}
+.tag.mine{background:var(--accent);color:#fff;border-color:transparent}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin:-10px 0 22px}
+.btn{border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:8px;padding:7px 14px;font:inherit;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.add{margin-top:8px;border:1px dashed var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:5px 10px;font:inherit;font-size:13px;cursor:pointer;width:100%}
+.add:hover{color:var(--accent);border-color:var(--accent)}
+.del{margin-left:6px;border:0;background:transparent;color:var(--rio);cursor:pointer;font:inherit;font-size:12px;text-decoration:underline;padding:0}
+dialog{border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:18px;width:min(460px,calc(100% - 32px))}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog h3{margin:0 0 12px}
+dialog label{display:block;font-size:13px;color:var(--muted);margin:8px 0 3px}
+dialog input,dialog select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.row{display:flex;gap:10px}.row>div{flex:1}
+.acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+@media print{.bar,.tools,.add,.del{display:none}.grid{display:block}.month{break-inside:avoid;margin-bottom:10px}}
 @media (max-width:420px){.det{margin-left:0;margin-top:4px}}
 </style>
 </head>
@@ -57,9 +71,33 @@ footer{margin-top:28px;color:var(--muted);font-size:13px}
 <button data-f="foz">Foz do Iguaçu</button>
 <button data-f="rio">Rio de Janeiro</button>
 <button data-f="ok">Só confirmadas</button>
+<button data-f="mine">Minhas corridas</button>
+</div>
+
+<div class="tools">
+<button class="btn" id="novo">+ Adicionar corrida</button>
+<button class="btn ghost" id="exp">Baixar backup das minhas corridas</button>
+<button class="btn ghost" id="imp">Restaurar backup</button>
+<input type="file" id="impf" accept=".json" hidden>
 </div>
 
 <div class="grid" id="grid"></div>
+
+<dialog id="dlg">
+<form id="frm" method="dialog">
+<h3 id="dlgt">Adicionar corrida</h3>
+<label for="fn">Nome da corrida *</label><input id="fn" required>
+<div class="row">
+<div><label for="fd">Data *</label><input id="fd" type="date" min="2027-01-01" max="2027-12-31" required></div>
+<div><label for="fc">Cidade</label><select id="fc"><option value="cwb">Curitiba e região</option><option value="foz">Foz do Iguaçu</option><option value="rio">Rio de Janeiro</option><option value="out">Outra cidade</option></select></div>
+</div>
+<label for="fk">Distâncias</label><input id="fk" placeholder="ex.: 5 e 10 km">
+<label for="fo">Organizador</label><input id="fo">
+<label for="ft">Contato (site, telefone, e-mail)</label><input id="ft">
+<label for="fs">Situação</label><select id="fs"><option value="ok">Confirmado</option><option value="prev">Previsto</option></select>
+<div class="acts"><button type="button" class="btn ghost" id="cancel">Cancelar</button><button class="btn" type="submit">Salvar</button></div>
+</form>
+</dialog>
 
 <footer>Fontes: Prefeitura de Curitiba, Bem Paraná, Banda B, Corrida1, Running.life, Brasilturis, Correio da Manhã, regulamentos no Ticketsports e sites dos organizadores.</footer>
 </div>
@@ -93,20 +131,65 @@ const R=[
 ];
 const M=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const W=["dom","seg","ter","qua","qui","sex","sáb"];
-const CN={cwb:"Curitiba e região",foz:"Foz do Iguaçu",rio:"Rio de Janeiro"};
+const CN={cwb:"Curitiba e região",foz:"Foz do Iguaçu",rio:"Rio de Janeiro",out:"Outra cidade"};
+const KEY='corridas2027-minhas';
+let MINE=[];try{MINE=JSON.parse(localStorage.getItem(KEY))||[]}catch(_){MINE=[]}
+function saveMine(){try{localStorage.setItem(KEY,JSON.stringify(MINE))}catch(_){alert('Não foi possível salvar neste navegador.')}}
+function esc(t){return String(t||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+let cur='all';
 function link(t){return t.replace(/([a-z0-9.-]+\.(com|gov|org)(\.br)?(\/[\w\/-]*)?)/gi,'<a href="https://$1" target="_blank" rel="noopener">$1</a>')}
 function draw(f){
+  cur=f;
   const g=document.getElementById('grid');g.innerHTML='';
+  const ALL=R.concat(MINE.map((r,ix)=>Object.assign({},r,{mine:true,ix})));
   M.forEach((m,i)=>{
-    const list=R.filter(r=>+r.d.slice(5,7)===i+1&&(f==='all'||r.c===f||(f==='ok'&&r.s==='ok')));
+    const list=ALL.filter(r=>+r.d.slice(5,7)===i+1&&(f==='all'||r.c===f||(f==='ok'&&r.s==='ok')||(f==='mine'&&r.mine))).sort((a,b)=>a.d.localeCompare(b.d));
     const el=document.createElement('section');el.className='month';
     el.innerHTML=`<h2>${m}<span>${list.length?list.length+' prova'+(list.length>1?'s':''):''}</span></h2>`+
     (list.length?list.map(r=>{const dt=new Date(r.d+'T12:00');
+      if(r.mine){const k=r.km?`<span class="tag">${esc(r.km)}</span>`:'';
+        return `<div class="race"><div class="top"><div class="date">${dt.getDate()}<small>${W[dt.getDay()]}</small></div><div><div class="name">${esc(r.n)}</div><div class="tags"><span class="tag mine">Minha</span><span class="tag ${r.c}">${CN[r.c]}</span><span class="tag ${r.s}">${r.s==='ok'?'Confirmado':'Previsto'}</span>${k}</div></div></div>
+        <div class="det"><b>Organizador:</b> ${esc(r.org)||'—'}<br><b>Contato:</b> ${esc(r.ct)||'—'}<br><button class="del" data-edit="${r.ix}">editar</button> <button class="del" data-del="${r.ix}">excluir</button></div></div>`}
       return `<div class="race"><div class="top"><div class="date">${r.multi||(r.approx?'~':'')+dt.getDate()}<small>${r.multi?'mai':W[dt.getDay()]}</small></div><div><div class="name">${r.n}</div><div class="tags"><span class="tag ${r.c}">${CN[r.c]}</span><span class="tag ${r.s}">${r.s==='ok'?'Confirmado':'Previsto'}</span><span class="tag">${r.km}</span></div></div></div>
-      <div class="det"><b>Organizador:</b> ${r.org}<br><b>Contato:</b> ${link(r.ct)}<br><b>Base:</b> ${r.ref}</div></div>`}).join(''):'<div class="empty">Nenhuma prova principal listada.</div>');
+      <div class="det"><b>Organizador:</b> ${r.org}<br><b>Contato:</b> ${link(r.ct)}<br><b>Base:</b> ${r.ref}</div></div>`}).join(''):'<div class="empty">Nenhuma prova listada.</div>')+
+    `<button class="add" data-m="${i+1}">+ adicionar corrida em ${m.toLowerCase()}</button>`;
     g.appendChild(el);
   });
 }
+const dlg=document.getElementById('dlg'),$=id=>document.getElementById(id);
+let editIx=null;
+function openForm(month,ix){
+  editIx=ix??null;const r=ix!=null?MINE[ix]:{};
+  $('dlgt').textContent=ix!=null?'Editar corrida':'Adicionar corrida';
+  $('fn').value=r.n||'';$('fd').value=r.d||(month?`2027-${String(month).padStart(2,'0')}-01`:'');
+  $('fc').value=r.c||'cwb';$('fk').value=r.km||'';$('fo').value=r.org||'';$('ft').value=r.ct||'';$('fs').value=r.s||'ok';
+  dlg.showModal();$('fn').focus();
+}
+$('novo').onclick=()=>openForm();
+$('cancel').onclick=()=>dlg.close();
+$('frm').addEventListener('submit',()=>{
+  const r={n:$('fn').value.trim(),d:$('fd').value,c:$('fc').value,km:$('fk').value.trim(),org:$('fo').value.trim(),ct:$('ft').value.trim(),s:$('fs').value};
+  if(!r.n||!/^2027-/.test(r.d))return;
+  if(editIx!=null)MINE[editIx]=r;else MINE.push(r);
+  saveMine();draw(cur);
+});
+$('grid').addEventListener('click',e=>{
+  const a=e.target.closest('[data-m]');if(a)return openForm(a.dataset.m);
+  const ed=e.target.closest('[data-edit]');if(ed)return openForm(null,+ed.dataset.edit);
+  const d=e.target.closest('[data-del]');
+  if(d&&confirm('Excluir "'+MINE[+d.dataset.del].n+'"?')){MINE.splice(+d.dataset.del,1);saveMine();draw(cur)}
+});
+$('exp').onclick=()=>{
+  const b=new Blob([JSON.stringify(MINE,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='minhas-corridas-2027.json';a.click();
+};
+$('imp').onclick=()=>$('impf').click();
+$('impf').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{
+  try{const arr=JSON.parse(t);if(!Array.isArray(arr))throw 0;
+    const ok=arr.filter(r=>r&&r.n&&/^2027-\d\d-\d\d$/.test(r.d)).map(r=>({n:String(r.n),d:r.d,c:CN[r.c]?r.c:'out',km:String(r.km||''),org:String(r.org||''),ct:String(r.ct||''),s:r.s==='prev'?'prev':'ok'}));
+    MINE=MINE.concat(ok);saveMine();draw(cur);alert(ok.length+' corrida(s) restaurada(s).');
+  }catch(_){alert('Arquivo inválido.')}
+  e.target.value='';})};
 document.getElementById('bar').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   document.querySelectorAll('#bar button').forEach(x=>x.classList.toggle('on',x===b));draw(b.dataset.f);try{localStorage.setItem('f',b.dataset.f)}catch(_){}});
 let f0='all';try{f0=localStorage.getItem('f')||'all'}catch(_){}
