@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Corridas 2027 Curitiba</title>
 <style>
-:root{--bg:#f3f1ec;--card:#fff;--ink:#16181d;--muted:#5c6068;--line:#e2ded6;--accent:#ff5a1f;--track:#c8452c;--ok:#13804a;--okbg:#ddf3e6;--prev:#9a6200;--prevbg:#fbefd6;--cwb:#13804a;--foz:#0a6c8f;--rio:#c8452c;--hero:#16181d}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1114;--card:#191c21;--ink:#eef0f3;--muted:#9aa0aa;--line:#2b2f36;--accent:#ff7a45;--track:#a8402b;--ok:#5fd394;--okbg:#173525;--prev:#f2bb5f;--prevbg:#3a2d14;--cwb:#5fd394;--foz:#5bbbe0;--rio:#ff8a6e;--hero:#000}}
-:root[data-theme="dark"]{--bg:#0f1114;--card:#191c21;--ink:#eef0f3;--muted:#9aa0aa;--line:#2b2f36;--accent:#ff7a45;--track:#a8402b;--ok:#5fd394;--okbg:#173525;--prev:#f2bb5f;--prevbg:#3a2d14;--cwb:#5fd394;--foz:#5bbbe0;--rio:#ff8a6e;--hero:#000}
+:root{--bg:#edf3f3;--card:#fff;--ink:#0c2228;--muted:#4b6268;--line:#d2dfe0;--accent:#0e6e7a;--glow:#3fd0c9;--track:#0b5867;--ok:#13804a;--okbg:#ddf3e6;--prev:#87600a;--prevbg:#f6eed8;--cwb:#0e6e7a;--foz:#2c7a3a;--rio:#a3304a;--hero:#05303a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081417;--card:#0f2125;--ink:#e4eff0;--muted:#93aaae;--line:#20383d;--accent:#3cbfc4;--glow:#5fe3da;--track:#0a4a56;--ok:#5fd394;--okbg:#153428;--prev:#e8c06a;--prevbg:#352c14;--cwb:#4fc9cd;--foz:#78c987;--rio:#f08aa0;--hero:#021b21}}
+:root[data-theme="dark"]{--bg:#081417;--card:#0f2125;--ink:#e4eff0;--muted:#93aaae;--line:#20383d;--accent:#3cbfc4;--glow:#5fe3da;--track:#0a4a56;--ok:#5fd394;--okbg:#153428;--prev:#e8c06a;--prevbg:#352c14;--cwb:#4fc9cd;--foz:#78c987;--rio:#f08aa0;--hero:#021b21}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 .wrap{max-width:1100px;margin:0 auto;padding:28px 16px 60px}
@@ -51,7 +51,8 @@ dialog label{display:block;font-size:13px;color:var(--muted);margin:8px 0 3px}
 dialog input,dialog select{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
 .row{display:flex;gap:10px}.row>div{flex:1}
 .acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
-@media print{.bar,.tools,.add,.del{display:none}.grid{display:block}.month{break-inside:avoid;margin-bottom:10px}}
+.msg{color:var(--rio);font-size:13px;margin:6px 0 0;min-height:1em}
+dialog .acts .btn{display:inline-flex;align-items:center}
 @media (max-width:420px){.det{margin-left:0;margin-top:4px}}
 /* ===== Visual esportivo ===== */
 h1,h2,h3,.date,.btn,.bar button,.name{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif}
@@ -61,7 +62,23 @@ h1,h2,h3,.date,.btn,.bar button,.name{font-family:"Barlow Condensed","Arial Narr
 .hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16px;
   background:conic-gradient(#fff 25%,#111 0 50%,#fff 0 75%,#111 0) 0 0/16px 16px}
 .hero .in{position:relative;max-width:1100px;margin:0 auto;z-index:1}
-.hero .kick{display:inline-block;background:var(--accent);color:#fff;font:700 13px/1 "Barlow Condensed",sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;border-radius:4px;transform:skewX(-10deg)}
+.hero{background:radial-gradient(120% 140% at 85% 0%,#0e5866 0%,var(--hero) 55%)}
+.hero h1 em{color:var(--glow)!important}
+.runners{position:absolute;right:4%;bottom:20px;display:flex;align-items:flex-end;gap:2.2%;z-index:1;pointer-events:none;width:min(560px,58%);justify-content:flex-end}
+.runners .r{height:96px;width:auto;overflow:visible;flex:0 0 auto;animation:bob .3s ease-in-out infinite alternate}
+.runners .r:nth-child(1){height:68px;color:rgba(255,255,255,.45);animation-delay:-.1s}
+.runners .r:nth-child(2){height:82px;color:var(--glow);animation-delay:-.2s}
+.runners .r:nth-child(3){height:104px;color:#fff}
+.runners .r:nth-child(4){height:86px;color:rgba(255,255,255,.7);animation-delay:-.15s}
+.runners .r .a,.runners .r .b{animation:flip .6s step-end infinite}
+.runners .r .b{animation-delay:-.3s}
+.runners .r:nth-child(2) .a,.runners .r:nth-child(2) .b{animation-duration:.54s}
+.runners .r:nth-child(4) .a,.runners .r:nth-child(4) .b{animation-duration:.66s}
+@keyframes flip{0%{opacity:1}50%{opacity:0}100%{opacity:1}}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.runners .r,.runners .r *{animation:none!important}.runners .r .b{display:none}}
+@media (max-width:640px){.runners{bottom:12px;right:12px;width:auto;gap:6px}.runners .r{height:58px!important}.runners .r:nth-child(1){display:none}}
+.hero .kick{display:inline-block;background:var(--glow);color:#05303a;font:700 13px/1 "Barlow Condensed",sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;border-radius:4px;transform:skewX(-10deg)}
 .hero h1{font-size:clamp(40px,8vw,76px);line-height:.95;margin:12px 0 6px;font-weight:800;font-style:italic;text-transform:uppercase;letter-spacing:-.01em}
 .hero h1 em{color:var(--accent);font-style:italic}
 .hero .sub{color:#d6d9de;font-size:16px;margin:0}
@@ -83,24 +100,115 @@ h1,h2,h3,.date,.btn,.bar button,.name{font-family:"Barlow Condensed","Arial Narr
 .btn{font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:4px;font-size:16px}
 .add{border-radius:4px}
 .note{border-left:5px solid var(--accent)}
-@media (max-width:420px){.det{margin-left:0}}
+.date.multi{font-size:17px;min-width:64px;padding-top:9px}
+.races{display:block}
+.pinfo{display:none}
+/* Botão PDF */
+.pdfbtn{position:absolute;top:0;right:0;display:inline-flex;align-items:center;gap:6px;background:#fff;color:#111;border:0;border-radius:4px;padding:9px 14px;
+  font:700 15px/1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;box-shadow:3px 3px 0 var(--accent);z-index:2}
+.pdfbtn{box-shadow:3px 3px 0 var(--glow)}
+.pdfbtn:hover{background:var(--glow);color:#05303a;box-shadow:3px 3px 0 #fff}
+.hero::before{background-color:var(--track)}
+.date{box-shadow:2px 2px 0 var(--glow)}
+.hero .kick{margin-top:6px}
+.hero h1{padding-right:0}
+
+/* ===== Celular ===== */
+.grid{grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))}
+@media (max-width:640px){
+  .hero{padding:20px 16px 92px}
+  .hero::before{height:64px}
+  .hero::after{height:12px;background-size:12px 12px}
+  .hero h1{font-size:44px;margin-top:14px}
+  .hero .sub{font-size:14px}
+  .hero .stats{gap:18px;margin-top:14px}
+  .hero .stats div{font-size:28px}
+  .hero .stats small{font-size:10px}
+  .pdfbtn{padding:8px 10px;font-size:13px}
+  .wrap{padding:18px 12px 40px}
+  .note{font-size:13px}
+  .bar{flex-wrap:nowrap;overflow-x:auto;margin:0 -12px 18px;padding:2px 12px 6px;scrollbar-width:none}
+  .bar::-webkit-scrollbar{display:none}
+  .bar button{flex:0 0 auto;font-size:14px}
+  .tools{margin-top:0}
+  .tools .btn{flex:1 1 100%;font-size:15px;padding:10px}
+  .tools .btn.ghost{flex:1 1 calc(50% - 4px);font-size:13px}
+  .month{padding:12px 12px}
+  .month h2{font-size:23px}
+  .date{min-width:50px;font-size:21px}
+  .date.multi{min-width:56px;font-size:15px}
+  .name{font-size:18px}
+  .det{margin-left:0;margin-top:6px}
+  .row{flex-direction:column;gap:0}
+  .add{padding:9px 10px}
+}
+@media (max-width:360px){.hero h1{font-size:38px}.pdfbtn span{display:none}}
+
+/* ===== PDF / Impressão ===== */
+@page{size:A4 portrait;margin:12mm 11mm 14mm}
+@media print{
+  :root,:root[data-theme],:root:not([data-theme="light"]){--bg:#fff;--card:#fff;--ink:#0c2228;--muted:#455b61;--line:#d2dfe0;--accent:#0e6e7a;--glow:#3fd0c9;--track:#0b5867;--ok:#13804a;--okbg:#ddf3e6;--prev:#87600a;--prevbg:#f6eed8;--cwb:#0e6e7a;--foz:#2c7a3a;--rio:#a3304a;--hero:#05303a}
+  .runners .r *{animation:none!important}.runners .r .b{display:none}
+  .runners{bottom:3.2mm;right:6mm}.runners .r{height:13mm}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html,body{background:#fff!important;font-size:10.5pt}
+  .bar,.tools,.add,.del,.pdfbtn,dialog{display:none!important}
+  .hero{padding:10mm 8mm 16mm;border-radius:0;margin:0 0 6mm}
+  .hero::before{height:9mm;transform:skewY(-2deg)}
+  .hero::after{height:3mm;background-size:3mm 3mm}
+  .hero h1{font-size:34pt;margin:4px 0 2px}
+  .hero .sub{font-size:11pt}
+  .hero .stats{margin-top:8px;gap:18px}
+  .hero .stats div{font-size:20pt}
+  .hero .stats small{font-size:7pt}
+  .pinfo{display:block;position:absolute;top:0;right:0;margin:0;color:#c9cdd3;font-size:8pt}
+  .wrap{max-width:none;padding:0}
+  .note{font-size:8.5pt;padding:6px 10px;margin-bottom:5mm;break-inside:avoid}
+  .grid{display:block}
+  .month{box-shadow:none;border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:6px;padding:7px 10px 6px;margin:0 0 4mm;break-inside:avoid;page-break-inside:avoid}
+  .month h2{font-size:17pt;margin:0 0 5px;padding-bottom:4px;border-bottom:1px solid var(--line);break-after:avoid}
+  .month h2 span{font-size:8pt}
+  .races{display:grid;grid-template-columns:1fr 1fr;column-gap:12px}
+  .race,.race:first-of-type{border-top:0;border-bottom:1px dashed var(--line);padding:5px 0;break-inside:avoid;page-break-inside:avoid}
+  .date{min-width:40px;font-size:15pt;padding:4px 2px 2px;box-shadow:1.5px 1.5px 0 var(--accent);border-width:1.5px}
+  .date::before,.date::after{width:3px;height:3px;top:3px}
+  .date.multi{min-width:46px;font-size:10.5pt;padding-top:6px}
+  .date small{font-size:6.5pt}
+  .top{gap:7px}
+  .name{font-size:12pt}
+  .tag{font-size:6.5pt;padding:0 5px}
+  .tags{gap:3px;margin:2px 0}
+  .det{margin:3px 0 0 47px;font-size:7.5pt;line-height:1.35}
+  .det a{color:var(--ink);text-decoration:none}
+  .empty{font-size:8pt}
+  body.filtered .month:has(.empty){display:none}
+  footer{font-size:7.5pt;margin-top:3mm}
+}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&display=swap" rel="stylesheet">
 </head>
 <body>
 <header class="hero"><div class="in">
+<button class="pdfbtn" id="pdf" type="button" title="Baixar o calendário em PDF"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 3a1 1 0 0 1 1 1v9.6l3.3-3.3a1 1 0 1 1 1.4 1.4l-5 5a1 1 0 0 1-1.4 0l-5-5a1 1 0 1 1 1.4-1.4l3.3 3.3V4a1 1 0 0 1 1-1zM5 19h14a1 1 0 1 1 0 2H5a1 1 0 1 1 0-2z"/></svg><span>Baixar PDF</span></button>
 <span class="kick">Temporada 2027</span>
 <h1>Calendário de <em>Corridas</em></h1>
 <p class="sub">Curitiba e região · Foz do Iguaçu · Rio de Janeiro</p>
 <div class="stats"><div id="stTot">0<small>provas no ano</small></div><div id="stOk">0<small>confirmadas</small></div><div id="stMine">0<small>adicionadas por você</small></div></div>
-</div></header>
-<div class="wrap">
-
-<div class="note">
-<b>Como ler:</b> <span class="tag ok">Confirmado</span> = data oficial de 2027 já anunciada.
-<span class="tag prev">Previsto</span> = data estimada com base no mesmo fim de semana de 2026 (a maioria das provas ainda não divulgou o calendário de 2027). Confirme no site do organizador antes de se inscrever. Pesquisa feita em 18/11/2026.
+<p class="pinfo" id="pinfo"></p>
 </div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<symbol id="rA" viewBox="-16 0 76 80"><g fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><path d="M31 22 L25 44"/><path d="M31 25 L41 33 L50 27"/><path d="M31 25 L21 31 L15 41"/><path d="M25 44 L37 55 L34 72"/><path d="M25 44 L17 58 L5 61"/></g><path d="M-14 30 H-4 M-12 42 H-2 M-14 54 H-6" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".55"/><circle cx="37" cy="11" r="7.5" fill="currentColor"/></symbol>
+<symbol id="rB" viewBox="-16 0 76 80"><g fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"><path d="M31 22 L25 44"/><path d="M31 25 L37 36 L45 34"/><path d="M31 25 L24 34 L22 44"/><path d="M25 44 L33 58 L28 72"/><path d="M25 44 L38 50 L33 62"/></g><path d="M-14 30 H-4 M-12 42 H-2 M-14 54 H-6" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".55"/><circle cx="37" cy="12" r="7.5" fill="currentColor"/></symbol>
+</svg>
+<div class="runners" aria-hidden="true">
+<svg class="r" viewBox="-16 0 76 80"><use class="a" href="#rA"/><use class="b" href="#rB"/></svg>
+<svg class="r" viewBox="-16 0 76 80"><use class="a" href="#rA"/><use class="b" href="#rB"/></svg>
+<svg class="r" viewBox="-16 0 76 80"><use class="a" href="#rA"/><use class="b" href="#rB"/></svg>
+<svg class="r" viewBox="-16 0 76 80"><use class="a" href="#rA"/><use class="b" href="#rB"/></svg>
+</div>
+</header>
+<div class="wrap">
 
 <div class="bar" id="bar">
 <button class="on" data-f="all">Todas</button>
@@ -108,32 +216,47 @@ h1,h2,h3,.date,.btn,.bar button,.name{font-family:"Barlow Condensed","Arial Narr
 <button data-f="foz">Foz do Iguaçu</button>
 <button data-f="rio">Rio de Janeiro</button>
 <button data-f="ok">Só confirmadas</button>
-<button data-f="mine">Minhas corridas</button>
+<button data-f="mine">Adicionadas</button>
 </div>
 
 <div class="tools">
-<button class="btn" id="novo">+ Adicionar corrida</button>
-<button class="btn ghost" id="exp">Baixar backup das minhas corridas</button>
-<button class="btn ghost" id="imp">Restaurar backup</button>
-<input type="file" id="impf" accept=".json" hidden>
+<button class="btn" id="novo">🔒 Adicionar corrida</button>
 </div>
 
 <div class="grid" id="grid"></div>
 
 <dialog id="dlg">
-<form id="frm" method="dialog">
-<h3 id="dlgt">Adicionar corrida</h3>
-<label for="fn">Nome da corrida *</label><input id="fn" required>
+<form id="frm">
+<h3>Adicionar corrida</h3>
+<label for="fn">Nome da corrida *</label><input id="fn" required maxlength="120">
 <div class="row">
 <div><label for="fd">Data *</label><input id="fd" type="date" min="2027-01-01" max="2027-12-31" required></div>
 <div><label for="fc">Cidade</label><select id="fc"><option value="cwb">Curitiba e região</option><option value="foz">Foz do Iguaçu</option><option value="rio">Rio de Janeiro</option><option value="out">Outra cidade</option></select></div>
 </div>
-<label for="fk">Distâncias</label><input id="fk" placeholder="ex.: 5 e 10 km">
-<label for="fo">Organizador</label><input id="fo">
-<label for="ft">Contato (site, telefone, e-mail)</label><input id="ft">
+<label for="fk">Distâncias</label><input id="fk" placeholder="ex.: 5 e 10 km" maxlength="120">
+<label for="fo">Organizador</label><input id="fo" maxlength="160">
+<label for="ft">Contato (site, telefone, e-mail)</label><input id="ft" maxlength="200">
 <label for="fs">Situação</label><select id="fs"><option value="ok">Confirmado</option><option value="prev">Previsto</option></select>
-<div class="acts"><button type="button" class="btn ghost" id="cancel">Cancelar</button><button class="btn" type="submit">Salvar</button></div>
+<label for="fp">🔒 Senha para liberar *</label><input id="fp" type="password" inputmode="numeric" autocomplete="off" required>
+<p class="msg" id="msg"></p>
+<div class="acts"><button type="button" class="btn ghost" data-close>Cancelar</button><button class="btn" type="submit">Confirmar</button></div>
 </form>
+</dialog>
+
+<dialog id="dlgp">
+<form id="frmp">
+<h3>Remover corrida</h3>
+<p id="pnome" style="margin:0 0 6px"></p>
+<label for="pp">🔒 Senha para liberar *</label><input id="pp" type="password" inputmode="numeric" autocomplete="off" required>
+<p class="msg" id="pmsg"></p>
+<div class="acts"><button type="button" class="btn ghost" data-close>Cancelar</button><button class="btn" type="submit">Confirmar</button></div>
+</form>
+</dialog>
+
+<dialog id="dlgok">
+<h3>Falta só um clique ✅</h3>
+<p style="margin:0 0 10px">Senha aceita. Agora abra o GitHub e clique no botão verde <b>Create</b> para gravar a alteração no site. Em 1 ou 2 minutos ela aparece para todo mundo.</p>
+<div class="acts"><button type="button" class="btn ghost" data-close>Fechar</button><a class="btn" id="golink" href="#" target="_blank" rel="noopener" style="text-decoration:none">Abrir GitHub</a></div>
 </dialog>
 
 <footer>Fontes: Prefeitura de Curitiba, Bem Paraná, Banda B, Corrida1, Running.life, Brasilturis, Correio da Manhã, regulamentos no Ticketsports e sites dos organizadores.</footer>
@@ -169,70 +292,75 @@ const R=[
 const M=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const W=["dom","seg","ter","qua","qui","sex","sáb"];
 const CN={cwb:"Curitiba e região",foz:"Foz do Iguaçu",rio:"Rio de Janeiro",out:"Outra cidade"};
-const KEY='corridas2027-minhas';
-let MINE=[];try{MINE=JSON.parse(localStorage.getItem(KEY))||[]}catch(_){MINE=[]}
-function saveMine(){try{localStorage.setItem(KEY,JSON.stringify(MINE))}catch(_){alert('Não foi possível salvar neste navegador.')}}
+const REPO='leandrormctba-volvo/corridas-2027';
+const HASH='bc1583dbd69cf369314be86b8579f367cd17e441986f9131c240015829f044cf';
+let EXTRA=[];
 function esc(t){return String(t||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function sha(t){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t));return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
 let cur='all';
 function link(t){return t.replace(/([a-z0-9.-]+\.(com|gov|org)(\.br)?(\/[\w\/-]*)?)/gi,'<a href="https://$1" target="_blank" rel="noopener">$1</a>')}
 function draw(f){
   cur=f;
+  const FN={all:'Todas as provas',cwb:'Curitiba e região',foz:'Foz do Iguaçu',rio:'Rio de Janeiro',ok:'Só confirmadas',mine:'Adicionadas'};
+  document.getElementById('pinfo').textContent='Filtro: '+FN[f]+' · Gerado em '+new Date().toLocaleDateString('pt-BR');
+  document.body.classList.toggle('filtered',f!=='all');
   const g=document.getElementById('grid');g.innerHTML='';
-  const ALL=R.concat(MINE.map((r,ix)=>Object.assign({},r,{mine:true,ix})));
+  const ALL=R.concat(EXTRA.map(r=>Object.assign({},r,{mine:true})));
   const st=(id,v,l)=>{document.getElementById(id).innerHTML=v+'<small>'+l+'</small>'};
-  st('stTot',ALL.length,'provas no ano');st('stOk',ALL.filter(r=>r.s==='ok').length,'confirmadas');st('stMine',MINE.length,'adicionadas por você');
+  st('stTot',ALL.length,'provas no ano');st('stOk',ALL.filter(r=>r.s==='ok').length,'confirmadas');st('stMine',EXTRA.length,'adicionadas');
   M.forEach((m,i)=>{
     const list=ALL.filter(r=>+r.d.slice(5,7)===i+1&&(f==='all'||r.c===f||(f==='ok'&&r.s==='ok')||(f==='mine'&&r.mine))).sort((a,b)=>a.d.localeCompare(b.d));
     const el=document.createElement('section');el.className='month';
     el.innerHTML=`<h2>${m}<span>${list.length?list.length+' prova'+(list.length>1?'s':''):''}</span></h2>`+
-    (list.length?list.map(r=>{const dt=new Date(r.d+'T12:00');
+    (list.length?'<div class="races">'+list.map(r=>{const dt=new Date(r.d+'T12:00');
       if(r.mine){const k=r.km?`<span class="tag">${esc(r.km)}</span>`:'';
-        return `<div class="race"><div class="top"><div class="date">${dt.getDate()}<small>${W[dt.getDay()]}</small></div><div><div class="name">${esc(r.n)}</div><div class="tags"><span class="tag mine">Minha</span><span class="tag ${r.c}">${CN[r.c]}</span><span class="tag ${r.s}">${r.s==='ok'?'Confirmado':'Previsto'}</span>${k}</div></div></div>
-        <div class="det"><b>Organizador:</b> ${esc(r.org)||'—'}<br><b>Contato:</b> ${esc(r.ct)||'—'}<br><button class="del" data-edit="${r.ix}">editar</button> <button class="del" data-del="${r.ix}">excluir</button></div></div>`}
-      return `<div class="race"><div class="top"><div class="date">${r.multi||(r.approx?'~':'')+dt.getDate()}<small>${r.multi?'mai':W[dt.getDay()]}</small></div><div><div class="name">${r.n}</div><div class="tags"><span class="tag ${r.c}">${CN[r.c]}</span><span class="tag ${r.s}">${r.s==='ok'?'Confirmado':'Previsto'}</span><span class="tag">${r.km}</span></div></div></div>
-      <div class="det"><b>Organizador:</b> ${r.org}<br><b>Contato:</b> ${link(r.ct)}<br><b>Base:</b> ${r.ref}</div></div>`}).join(''):'<div class="empty">Nenhuma prova listada.</div>')+
-    `<button class="add" data-m="${i+1}">+ adicionar corrida em ${m.toLowerCase()}</button>`;
+        return `<div class="race"><div class="top"><div class="date">${dt.getDate()}<small>${W[dt.getDay()]}</small></div><div><div class="name">${esc(r.n)}</div><div class="tags"><span class="tag mine">Adicionada</span><span class="tag ${CN[r.c]?r.c:'out'}">${CN[r.c]||CN.out}</span><span class="tag ${r.s==='prev'?'prev':'ok'}">${r.s==='prev'?'Previsto':'Confirmado'}</span>${k}</div></div></div>
+        <div class="det"><b>Organizador:</b> ${esc(r.org)||'—'}<br><b>Contato:</b> ${esc(r.ct)||'—'}<br><button class="del" data-del="${esc(r.id)}">🔒 remover</button></div></div>`}
+      return `<div class="race"><div class="top"><div class="date${r.multi?' multi':''}">${r.multi||(r.approx?'~':'')+dt.getDate()}<small>${r.multi?'mai':W[dt.getDay()]}</small></div><div><div class="name">${r.n}</div><div class="tags"><span class="tag ${r.c}">${CN[r.c]}</span><span class="tag ${r.s}">${r.s==='ok'?'Confirmado':'Previsto'}</span><span class="tag">${r.km}</span></div></div></div>
+      <div class="det"><b>Organizador:</b> ${r.org}<br><b>Contato:</b> ${link(r.ct)}<br><b>Base:</b> ${r.ref}</div></div>`}).join('')+'</div>':'<div class="empty">Nenhuma prova listada.</div>')+
+    `<button class="add" data-m="${i+1}">🔒 adicionar corrida em ${m.toLowerCase()}</button>`;
     g.appendChild(el);
   });
 }
-const dlg=document.getElementById('dlg'),$=id=>document.getElementById(id);
-let editIx=null;
-function openForm(month,ix){
-  editIx=ix??null;const r=ix!=null?MINE[ix]:{};
-  $('dlgt').textContent=ix!=null?'Editar corrida':'Adicionar corrida';
-  $('fn').value=r.n||'';$('fd').value=r.d||(month?`2027-${String(month).padStart(2,'0')}-01`:'');
-  $('fc').value=r.c||'cwb';$('fk').value=r.km||'';$('fo').value=r.org||'';$('ft').value=r.ct||'';$('fs').value=r.s||'ok';
-  dlg.showModal();$('fn').focus();
+const $=id=>document.getElementById(id);
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+function issueUrl(title,payload){
+  const body='Pedido gerado pelo site do calendário. Clique em **Create** para confirmar.\n\n```json\n'+JSON.stringify(payload,null,2)+'\n```';
+  return `https://github.com/${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+}
+function done(url){$('golink').href=url;$('dlgok').showModal()}
+function openForm(month){
+  $('frm').reset();$('msg').textContent='';
+  if(month)$('fd').value=`2027-${String(month).padStart(2,'0')}-01`;
+  $('dlg').showModal();$('fn').focus();
 }
 $('novo').onclick=()=>openForm();
-$('cancel').onclick=()=>dlg.close();
-$('frm').addEventListener('submit',()=>{
-  const r={n:$('fn').value.trim(),d:$('fd').value,c:$('fc').value,km:$('fk').value.trim(),org:$('fo').value.trim(),ct:$('ft').value.trim(),s:$('fs').value};
-  if(!r.n||!/^2027-/.test(r.d))return;
-  if(editIx!=null)MINE[editIx]=r;else MINE.push(r);
-  saveMine();draw(cur);
+$('pdf').onclick=()=>{const t=document.title;document.title='Calendario-Corridas-2027';window.print();setTimeout(()=>document.title=t,1000)};
+$('frm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(await sha($('fp').value.trim())!==HASH){$('msg').textContent='Senha incorreta.';$('fp').select();return}
+  const r={id:Date.now().toString(36),n:$('fn').value.trim(),d:$('fd').value,c:$('fc').value,km:$('fk').value.trim(),org:$('fo').value.trim(),ct:$('ft').value.trim(),s:$('fs').value};
+  if(!r.n||!/^2027-\d\d-\d\d$/.test(r.d)){$('msg').textContent='Preencha nome e data (em 2027).';return}
+  $('dlg').close();done(issueUrl('Adicionar corrida: '+r.n,{acao:'adicionar',corrida:r}));
 });
+let delId=null;
 $('grid').addEventListener('click',e=>{
   const a=e.target.closest('[data-m]');if(a)return openForm(a.dataset.m);
-  const ed=e.target.closest('[data-edit]');if(ed)return openForm(null,+ed.dataset.edit);
-  const d=e.target.closest('[data-del]');
-  if(d&&confirm('Excluir "'+MINE[+d.dataset.del].n+'"?')){MINE.splice(+d.dataset.del,1);saveMine();draw(cur)}
+  const d=e.target.closest('[data-del]');if(!d)return;
+  delId=d.dataset.del;const r=EXTRA.find(x=>x.id===delId);
+  $('frmp').reset();$('pmsg').textContent='';$('pnome').textContent=r?r.n:'';$('dlgp').showModal();
 });
-$('exp').onclick=()=>{
-  const b=new Blob([JSON.stringify(MINE,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='minhas-corridas-2027.json';a.click();
-};
-$('imp').onclick=()=>$('impf').click();
-$('impf').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{
-  try{const arr=JSON.parse(t);if(!Array.isArray(arr))throw 0;
-    const ok=arr.filter(r=>r&&r.n&&/^2027-\d\d-\d\d$/.test(r.d)).map(r=>({n:String(r.n),d:r.d,c:CN[r.c]?r.c:'out',km:String(r.km||''),org:String(r.org||''),ct:String(r.ct||''),s:r.s==='prev'?'prev':'ok'}));
-    MINE=MINE.concat(ok);saveMine();draw(cur);alert(ok.length+' corrida(s) restaurada(s).');
-  }catch(_){alert('Arquivo inválido.')}
-  e.target.value='';})};
+$('frmp').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(await sha($('pp').value.trim())!==HASH){$('pmsg').textContent='Senha incorreta.';$('pp').select();return}
+  const r=EXTRA.find(x=>x.id===delId)||{n:delId};
+  $('dlgp').close();done(issueUrl('Remover corrida: '+r.n,{acao:'remover',id:delId}));
+});
 document.getElementById('bar').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   document.querySelectorAll('#bar button').forEach(x=>x.classList.toggle('on',x===b));draw(b.dataset.f);try{localStorage.setItem('f',b.dataset.f)}catch(_){}});
 let f0='all';try{f0=localStorage.getItem('f')||'all'}catch(_){}
 document.querySelectorAll('#bar button').forEach(x=>x.classList.toggle('on',x.dataset.f===f0));draw(f0);
+fetch('extras.json?t='+Date.now()).then(r=>r.ok?r.json():[]).then(a=>{EXTRA=Array.isArray(a)?a.filter(r=>r&&r.n&&/^2027-\d\d-\d\d$/.test(r.d)):[];draw(cur)}).catch(()=>{});
 </script>
 </body>
 </html>

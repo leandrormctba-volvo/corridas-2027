@@ -1,0 +1,54 @@
+name: Atualizar corridas pelo site
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pages: write
+
+concurrency:
+  group: corridas
+  cancel-in-progress: false
+
+jobs:
+  aplicar:
+    # Só aceita pedidos feitos pelo dono do repositório
+    if: >-
+      github.event.issue.user.login == github.repository_owner &&
+      (startsWith(github.event.issue.title, 'Adicionar corrida:') ||
+       startsWith(github.event.issue.title, 'Remover corrida:'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Aplicar pedido
+        env:
+          BODY: ${{ github.event.issue.body }}
+        run: node .github/scripts/aplicar.js 2> "$RUNNER_TEMP/err.txt"
+
+      - name: Gravar no site
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add extras.json
+          git commit -m "$(cat "$RUNNER_TEMP/msg.txt")"
+          git push
+
+      - name: Atualizar GitHub Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
+
+      - name: Fechar pedido (ok)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue close ${{ github.event.issue.number }} -R ${{ github.repository }} --comment "✅ $(cat "$RUNNER_TEMP/msg.txt") O site atualiza em 1 a 2 minutos."
+
+      - name: Fechar pedido (erro)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue close ${{ github.event.issue.number }} -R ${{ github.repository }} --comment "❌ Não foi possível aplicar: $(cat "$RUNNER_TEMP/err.txt" 2>/dev/null || echo 'erro desconhecido')"
