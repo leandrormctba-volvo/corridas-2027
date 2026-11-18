@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corridas 2027 Curitiba</title>
+<style>
+:root{--bg:#f6f7f4;--card:#fff;--ink:#1d2320;--muted:#5d6762;--line:#e1e5e0;--accent:#1f7a4d;--ok:#1f7a4d;--okbg:#e3f3ea;--prev:#9a6200;--prevbg:#fbf0dc;--cwb:#1f7a4d;--foz:#0a6c8f;--rio:#b0402b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141816;--card:#1c211f;--ink:#e8ece9;--muted:#9aa5a0;--line:#2d3431;--accent:#5cc28d;--ok:#6fd29c;--okbg:#1d3a2b;--prev:#f0b860;--prevbg:#3a2e17;--cwb:#5cc28d;--foz:#5bbbe0;--rio:#ef8a73}}
+:root[data-theme="dark"]{--bg:#141816;--card:#1c211f;--ink:#e8ece9;--muted:#9aa5a0;--line:#2d3431;--accent:#5cc28d;--ok:#6fd29c;--okbg:#1d3a2b;--prev:#f0b860;--prevbg:#3a2e17;--cwb:#5cc28d;--foz:#5bbbe0;--rio:#ef8a73}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:28px 16px 60px}
+h1{font-size:28px;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 18px}
+.note{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:18px;font-size:14px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.bar button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;cursor:pointer}
+.bar button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.month{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.month h2{font-size:18px;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline}
+.month h2 span{font-size:12px;color:var(--muted);font-weight:400}
+.empty{color:var(--muted);font-size:13px;font-style:italic}
+.race{border-top:1px solid var(--line);padding:10px 0 8px}
+.race:first-of-type{border-top:0;padding-top:0}
+.top{display:flex;gap:10px;align-items:flex-start}
+.date{min-width:54px;text-align:center;border-radius:8px;padding:4px 2px;background:var(--bg);font-weight:700;font-size:15px;line-height:1.15}
+.date small{display:block;font-weight:400;font-size:11px;color:var(--muted)}
+.name{font-weight:650}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin:3px 0}
+.tag{font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.tag.cwb{color:var(--cwb);border-color:var(--cwb)}.tag.foz{color:var(--foz);border-color:var(--foz)}.tag.rio{color:var(--rio);border-color:var(--rio)}
+.tag.ok{background:var(--okbg);color:var(--ok);border-color:transparent}
+.tag.prev{background:var(--prevbg);color:var(--prev);border-color:transparent}
+.det{font-size:13px;color:var(--muted);margin-left:64px}
+.det b{color:var(--ink);font-weight:600}
+.det a{color:var(--accent);word-break:break-all}
+footer{margin-top:28px;color:var(--muted);font-size:13px}
+@media print{.bar{display:none}.grid{display:block}.month{break-inside:avoid;margin-bottom:10px}}
+@media (max-width:420px){.det{margin-left:0;margin-top:4px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Calendário de Corridas 2027</h1>
+<p class="sub">Curitiba e região · Foz do Iguaçu · Rio de Janeiro</p>
+
+<div class="note">
+<b>Como ler:</b> <span class="tag ok">Confirmado</span> = data oficial de 2027 já anunciada.
+<span class="tag prev">Previsto</span> = data estimada com base no mesmo fim de semana de 2026 (a maioria das provas ainda não divulgou o calendário de 2027). Confirme no site do organizador antes de se inscrever. Pesquisa feita em 18/11/2026.
+</div>
+
+<div class="bar" id="bar">
+<button class="on" data-f="all">Todas</button>
+<button data-f="cwb">Curitiba e região</button>
+<button data-f="foz">Foz do Iguaçu</button>
+<button data-f="rio">Rio de Janeiro</button>
+<button data-f="ok">Só confirmadas</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>Fontes: Prefeitura de Curitiba, Bem Paraná, Banda B, Corrida1, Running.life, Brasilturis, Correio da Manhã, regulamentos no Ticketsports e sites dos organizadores.</footer>
+</div>
+
+<script>
+const R=[
+{d:"2027-01-31",n:"Batel Run",c:"cwb",s:"prev",km:"5 e 10 km",org:"Laercio Poli / GL Promo",ct:"glpromo.com.br · inscrições no ticketsports.com.br",ref:"2026: 25/01 (último domingo de janeiro)"},
+{d:"2027-03-07",n:"Santander Meia de Curitiba",c:"cwb",s:"prev",km:"21 km (e provas menores)",org:"Global Vita Sports",ct:"Canais oficiais da Global Vita Sports",ref:"2026: 08/03 (fim de semana do Dia da Mulher)"},
+{d:"2027-03-21",n:"Ironman 70.3 Curitiba (triathlon)",c:"cwb",s:"ok",km:"1,9 km natação · 90 km bike · 21 km corrida",org:"IRONMAN Brasil",ct:"ironman.com",ref:"Data 2027 já publicada"},
+{d:"2027-03-21",n:"Circuito Curitiba de Corridas de Rua – 1ª etapa",c:"cwb",s:"prev",km:"5 e 10 km",org:"Prefeitura de Curitiba – SMELJ (Secretaria do Esporte, Lazer e Juventude)",ct:"curitiba.pr.gov.br · Central 156",ref:"2026: 22/03"},
+{d:"2027-04-25",n:"Circuito das Estações – Outono",c:"cwb",s:"prev",km:"5 e 10 km",org:"Ação Concreta / Norte Marketing Esportivo",ct:"circuitodasestacoes.com.br",ref:"2026: 26/04, Centro Cívico"},
+{d:"2027-05-16",n:"Meia Maratona das Cataratas",c:"foz",s:"prev",km:"8 km, 10,5 km, 21 km e Desafio da Onça",org:"Urbia Cataratas (realização) · Global Vita Sports (organização)",ct:"cataratasdoiguacu.com.br",ref:"2026: 16–17/05, Parque Nacional do Iguaçu"},
+{d:"2027-05-30",n:"Maratona do Rio – 25 anos",c:"rio",s:"ok",km:"5K (27/05) · 10K (28/05) · 21K (29/05) · 42K (30/05)",org:"Dream Factory",ct:"maratonadorio.com.br · inscrições pela plataforma Go Dream",ref:"Confirmado: 27 a 30/05/2027 (feriado de Corpus Christi)",multi:"27–30"},
+{d:"2027-06-06",n:"Meia Maratona Internacional de Curitiba",c:"cwb",s:"prev",km:"21 km (e provas menores)",org:"Thomé e Santos (Vilson e Filippe Thomé)",ct:"thomeesantos.com.br",ref:"2026: 07/06"},
+{d:"2027-06-13",n:"Circuito Curitiba de Corridas de Rua – 2ª etapa",c:"cwb",s:"prev",km:"5 e 10 km",org:"Prefeitura de Curitiba – SMELJ",ct:"curitiba.pr.gov.br · Central 156",ref:"2026: 14/06"},
+{d:"2027-06-27",n:"Corrida Entre Parques",c:"cwb",s:"prev",km:"até 22 km (passa por 9 parques)",org:"Prefeitura de Curitiba – SMELJ",ct:"curitiba.pr.gov.br · Central 156",ref:"2026: fim de junho (18ª edição)"},
+{d:"2027-08-08",n:"Circuito das Estações – Inverno",c:"cwb",s:"prev",km:"5, 10 e 15 km",org:"Ação Concreta / Norte Marketing Esportivo",ct:"circuitodasestacoes.com.br",ref:"2026: 09/08, Praça N. Sra. de Salete"},
+{d:"2027-08-08",n:"Meia Maratona de Foz do Iguaçu",c:"foz",s:"prev",km:"21 km",org:"A confirmar (largada na sede do Foz do Iguaçu FC)",ct:"A confirmar",ref:"2026: 09/08 (2ª edição; fontes divergem)"},
+{d:"2027-08-15",n:"Meia Maratona de Pinhais (Grande Curitiba)",c:"cwb",s:"prev",km:"21 km",org:"A confirmar",ct:"A confirmar",ref:"2026: 16/08, Parque das Águas"},
+{d:"2027-09-12",n:"Circuito das Estações – Primavera",c:"cwb",s:"prev",km:"5 e 10 km",org:"Ação Concreta / Norte Marketing Esportivo",ct:"circuitodasestacoes.com.br",ref:"2026: 13/09"},
+{d:"2027-09-26",n:"Circuito Curitiba de Corridas de Rua – 3ª etapa",c:"cwb",s:"prev",km:"5 e 10 km",org:"Prefeitura de Curitiba – SMELJ",ct:"curitiba.pr.gov.br · Central 156",ref:"2026: 27/09"},
+{d:"2027-09-26",n:"Maratona Internacional de Foz do Iguaçu",c:"foz",s:"prev",km:"42 km (Itaipu → Cataratas), revezamento, 10 km, 5 km e kids",org:"Sesc PR, com Itaipu Binacional e Prefeitura de Foz",ct:"sescpr.com.br/maratona",ref:"2026: 27/09 (16ª edição)"},
+{d:"2027-10-16",n:"Santander Night Run – Curitiba",c:"cwb",s:"prev",km:"5 e 10 km (noturna, sábado)",org:"TTK Marketing (a confirmar)",ct:"A confirmar",ref:"2026: 17/10 (sábado)"},
+{d:"2027-10-24",n:"The Hardest Run",c:"cwb",s:"prev",km:"a confirmar",org:"A confirmar (renda para o Hospital Erastinho)",ct:"A confirmar",ref:"2026: outubro (7ª edição) – dia exato a confirmar",approx:true},
+{d:"2027-11-07",n:"Circuito Curitiba de Corridas de Rua – 4ª etapa",c:"cwb",s:"prev",km:"5 e 10 km",org:"Prefeitura de Curitiba – SMELJ",ct:"curitiba.pr.gov.br · Central 156",ref:"2026: 01/11"},
+{d:"2027-11-14",n:"Santander Maratona de Curitiba",c:"cwb",s:"prev",km:"5, 10, 21 e 42 km",org:"Global Vita Sports (com Associação Amazing Runs)",ct:"maratonadecuritiba.com.br",ref:"2026: 15/11. Em 2027 o dia 15 cai numa segunda, então o domingo provável é 14/11"},
+{d:"2027-11-21",n:"Corrida do Fogo",c:"cwb",s:"prev",km:"a confirmar",org:"Corpo de Bombeiros Militar do Paraná",ct:"bombeiros.pr.gov.br",ref:"2026: novembro (8ª edição) – dia exato a confirmar",approx:true},
+{d:"2027-11-28",n:"Circuito das Estações – Verão",c:"cwb",s:"prev",km:"5 e 10 km",org:"Ação Concreta / Norte Marketing Esportivo",ct:"circuitodasestacoes.com.br",ref:"2026: 29/11"},
+{d:"2027-12-05",n:"Corrida GP Brasil – Curitiba",c:"cwb",s:"prev",km:"3, 5, 10 e 15 km",org:"A confirmar",ct:"A confirmar",ref:"2026: 06/12"},
+{d:"2027-12-05",n:"Corrida do Natal de Curitiba",c:"cwb",s:"prev",km:"6 km",org:"Prefeitura de Curitiba (Natal de Curitiba)",ct:"curitiba.pr.gov.br · Central 156",ref:"2026: 06/12"}
+];
+const M=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const W=["dom","seg","ter","qua","qui","sex","sáb"];
+const CN={cwb:"Curitiba e região",foz:"Foz do Iguaçu",rio:"Rio de Janeiro"};
+function link(t){return t.replace(/([a-z0-9.-]+\.(com|gov|org)(\.br)?(\/[\w\/-]*)?)/gi,'<a href="https://$1" target="_blank" rel="noopener">$1</a>')}
+function draw(f){
+  const g=document.getElementById('grid');g.innerHTML='';
+  M.forEach((m,i)=>{
+    const list=R.filter(r=>+r.d.slice(5,7)===i+1&&(f==='all'||r.c===f||(f==='ok'&&r.s==='ok')));
+    const el=document.createElement('section');el.className='month';
+    el.innerHTML=`<h2>${m}<span>${list.length?list.length+' prova'+(list.length>1?'s':''):''}</span></h2>`+
+    (list.length?list.map(r=>{const dt=new Date(r.d+'T12:00');
+      return `<div class="race"><div class="top"><div class="date">${r.multi||(r.approx?'~':'')+dt.getDate()}<small>${r.multi?'mai':W[dt.getDay()]}</small></div><div><div class="name">${r.n}</div><div class="tags"><span class="tag ${r.c}">${CN[r.c]}</span><span class="tag ${r.s}">${r.s==='ok'?'Confirmado':'Previsto'}</span><span class="tag">${r.km}</span></div></div></div>
+      <div class="det"><b>Organizador:</b> ${r.org}<br><b>Contato:</b> ${link(r.ct)}<br><b>Base:</b> ${r.ref}</div></div>`}).join(''):'<div class="empty">Nenhuma prova principal listada.</div>');
+    g.appendChild(el);
+  });
+}
+document.getElementById('bar').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  document.querySelectorAll('#bar button').forEach(x=>x.classList.toggle('on',x===b));draw(b.dataset.f);try{localStorage.setItem('f',b.dataset.f)}catch(_){}});
+let f0='all';try{f0=localStorage.getItem('f')||'all'}catch(_){}
+document.querySelectorAll('#bar button').forEach(x=>x.classList.toggle('on',x.dataset.f===f0));draw(f0);
+</script>
+</body>
+</html>
