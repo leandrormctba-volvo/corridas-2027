@@ -45,10 +45,12 @@ jobs:
       - name: Fechar pedido (ok)
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue close ${{ github.event.issue.number }} -R ${{ github.repository }} --comment "✅ $(cat "$RUNNER_TEMP/msg.txt") O site atualiza em 1 a 2 minutos."
+        run: |
+          gh issue close ${{ github.event.issue.number }} -R ${{ github.repository }} --comment "✅ $(cat "$RUNNER_TEMP/msg.txt") O site atualiza em 1 a 2 minutos."
 
       - name: Fechar pedido (erro)
         if: failure()
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh issue close ${{ github.event.issue.number }} -R ${{ github.repository }} --comment "❌ Não foi possível aplicar: $(cat "$RUNNER_TEMP/err.txt" 2>/dev/null || echo 'erro desconhecido')"
+        run: |
+          gh issue close ${{ github.event.issue.number }} -R ${{ github.repository }} --comment "❌ Não foi possível aplicar: $(cat "$RUNNER_TEMP/err.txt" 2>/dev/null || echo 'erro desconhecido')"
